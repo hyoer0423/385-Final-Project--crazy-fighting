@@ -1,0 +1,54 @@
+module ram_matrix(
+
+		input [3:0] choose,
+		input [10:0] read_address,
+		input Clk,
+		output logic [3:0] data_Out
+);
+
+logic f1 [0:50000];//36*36=1296 pixels with 24-bits, 11bit addr=2048 addrs
+logic f2 [0:50000];
+logic f3 [0:50000];
+logic f7 [0:50000];
+logic f8 [0:50000];
+logic down [0:50000];
+logic jump [0:50000];
+logic kicked [0:50000];
+
+initial
+begin
+	 $readmemh("sprite_bytes/f1.txt", f1);
+	 $readmemh("sprite_bytes/f2.txt", f2);
+	 $readmemh("sprite_bytes/l1.txt", l1);
+	 $readmemh("sprite_bytes/l2.txt", l2);
+	 $readmemh("sprite_bytes/r1.txt", r1);
+	 $readmemh("sprite_bytes/r2.txt", r2);
+	 $readmemh("sprite_bytes/b1.txt", b1);
+	 $readmemh("sprite_bytes/b2.txt", b2);
+end
+
+
+always_ff @ (posedge Clk) begin
+	//if (we)
+	//	mem[write_address] <= data_In;
+	case(choose)
+	
+		3'b000:data_Out<= f1[read_address];
+		3'b001:data_Out<= f2[read_address];
+		
+		3'b010:data_Out<= f3[read_address];
+		3'b011:data_Out<= f7[read_address];
+		
+		3'b100:data_Out<= f8[read_address];
+		3'b101:data_Out<= down[read_address];
+		
+		3'b110:data_Out<= jump[read_address];
+		3'b111:data_Out<= kicked[read_address];
+		
+		default:
+			data_Out<= f1[read_address];//read the 32-bit address
+	endcase
+	
+end
+endmodule
+

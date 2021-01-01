@@ -1,0 +1,42 @@
+module FSM(
+		input Clk,Reset,
+		input [7:0] keycode, 
+		output logic is_start,is_play,is_win1,is_win2
+);
+
+enum logic [3:0] {start_page, fight_page, win1_page,win2_page}curr_state,next_state;
+
+always_ff@(posedge Clk)
+begin
+		if (Reset)
+			curr_state<=start_page;
+		else
+			curr_state<=next_state;
+
+end
+
+always_comb
+begin
+		next_state=curr_state;
+		unique case(curr_state)				//check the difference between enter and kp-enter
+				start_page: if (keycode==8'd40)//press enter to start the game 
+									next_state=fight_page;
+				fight_page: if (is_win1==1)
+									next_state=win1_page;
+								else if (is_win2==1)
+									next_state=win2_page;
+				win1_page: if (keycode==8'd41)//press ESC to restart this game
+									next_state=start_page;
+				win2_page: if (keycode==8'd41)
+									next_state=start_page;
+							
+		endcase
+		
+		case (curr_state)
+				start_page:begin
+					is_start=1'b1;
+					is_play=1'b0;
+					
+				end
+			
+							

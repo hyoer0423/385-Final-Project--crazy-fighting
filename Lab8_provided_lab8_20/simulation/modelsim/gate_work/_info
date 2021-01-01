@@ -1,0 +1,32 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/100/Lab8_provided/simulation/modelsim
+vlab8
+!s110 1606029279
+!i10b 1
+!s100 Jf0m4Rdk:>H;9^BJ^ZjhR0
+IKJa:Va8C94SQ794S>?3<a3
+VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1606027393
+8lab8_7_1200mv_85c_slow.vo
+Flab8_7_1200mv_85c_slow.vo
+L0 31
+OV;L;10.5b;63
+r1
+!s85 0
+31
+!s108 1606029279.000000
+!s107 lab8_7_1200mv_85c_slow.vo|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+.|lab8_7_1200mv_85c_slow.vo|
+!i113 1
+o-vlog01compat -work work
+!s92 -vlog01compat -work work +incdir+.
+tCvgOpt 0

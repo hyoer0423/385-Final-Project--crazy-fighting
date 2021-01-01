@@ -1,0 +1,89 @@
+module keycode_reader(
+ 
+input logic [32:0] keycode;
+ 
+output logic w_on, a_on, s_on, d_on, j_on, k_on,l_on,i_on,f1_on,f2_on, enter_on, esc_on
+ 
+);
+ 
+assign w_on = (keycode[31:24] == 8'h1A |
+ 
+keycode[23:16] == 8'h1A |
+ 
+keycode[15: 8] == 8'h1A |
+ 
+keycode[ 7: 0] == 8'h1A);
+ 
+assign a_on = (keycode[31:24] == 8'h04 |
+ 
+keycode[23:16] == 8'h04 |
+ 
+keycode[15: 8] == 8'h04 |
+ 
+keycode[ 7: 0] == 8'h04);
+
+assign s_on = (keycode[31:24] == 8'd22 |
+ 
+keycode[23:16] == 8'd22 |
+ 
+keycode[15: 8] == 8'd22 |
+ 
+keycode[ 7: 0] == 8'd22);
+ 
+assign d_on = (keycode[31:24] == 8'd07 |
+ 
+keycode[23:16] == 8'd07 |
+ 
+keycode[15: 8] == 8'd07 |
+ 
+keycode[ 7: 0] == 8'd07);
+ 
+assign w_on = (keycode[31:24] == 8'h1A |
+ 
+keycode[23:16] == 8'h1A |
+ 
+keycode[15: 8] == 8'h1A |
+ 
+keycode[ 7: 0] == 8'h1A);
+ 
+assign w_on = (keycode[31:24] == 8'h1A |
+ 
+keycode[23:16] == 8'h1A |
+ 
+keycode[15: 8] == 8'h1A |
+ 
+keycode[ 7: 0] == 8'h1A);
+ 
+assign w_on = (keycode[31:24] == 8'h1A |
+ 
+keycode[23:16] == 8'h1A |
+ 
+keycode[15: 8] == 8'h1A |
+ 
+keycode[ 7: 0] == 8'h1A);
+ 
+assign w_on = (keycode[31:24] == 8'h1A |
+ 
+keycode[23:16] == 8'h1A |
+ 
+keycode[15: 8] == 8'h1A |
+ 
+keycode[ 7: 0] == 8'h1A);
+ 
+assign w_on = (keycode[31:24] == 8'h1A |
+ 
+keycode[23:16] == 8'h1A |
+ 
+keycode[15: 8] == 8'h1A |
+ 
+keycode[ 7: 0] == 8'h1A);
+ 
+assign w_on = (keycode[31:24] == 8'h1A |
+ 
+keycode[23:16] == 8'h1A |
+ 
+keycode[15: 8] == 8'h1A |
+ 
+keycode[ 7: 0] == 8'h1A);
+ 
+ 

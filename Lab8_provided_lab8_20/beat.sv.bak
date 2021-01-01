@@ -1,0 +1,141 @@
+module Beat ( 
+	input logic Q_on,P_on,
+	input [9:0]HP_X_Pos, NPC_X_Pos,
+	input Clk,
+			Reset,
+			frame_clk,
+	input HP_face_d,NPC_face_d,
+	input HP_face_d,NPC_face_d,
+	output is_HPBeat,is_NPCBeat,
+	output [31:0] BeatHP_SRAM_ADDR,BeatNPC_SRAM_ADDR,
+	output b_color
+
+)
+//0lengque
+logic [31:0] offset,offset2;
+reg [9:0]HP_X,NPC_X;
+reg hp_Beat,NPC_Beat;
+reg [5:0] ff,mm;
+reg [1:0]HP_d,NPC_d;
+always_ff @(posedge frame_clk) 	
+
+	//updates flip flop, current state is the only one
+    begin
+	 if Reset
+		begin
+		ff<=6'b0;
+		is_HPBeat<=1'b0;
+		hp_Beat<=1'b0;
+		HP_X<=10'b0;
+		HP_d<=1'b0;
+		end
+		
+	 if (Q_on)&&(hp_Beat!=0)
+		begin
+		ff<=1;
+		is_HPBeat<=1;
+		hp_Beat<=0;
+		if HP_face_d==1
+			HP_d<=2'd2;
+		else
+			HP_d<=2'd0;
+		HP_X<=HP_X_Pos+100;
+		end
+	 else if(hp_Beat==0)
+		ff <= ff+1;
+		if HP_X<= 10'd639&&HP_X>=0
+			is_HPBeat<=1;
+			HP_X<=HP_X+(HP_d-1);
+		else
+			is_HPBeat<=0;
+			
+	 else 
+		ff<=0;
+		is_HPBeat<=0;
+	end
+	always_comb
+	begin 
+	if ff==0
+		hp_Beat=1
+	else
+		hp_Beat=0
+	end
+	
+	
+
+  assign BeatHP_SRAM_ADDR= DrawX-HP_X+19'd50 + (DrawY-10'd300+10'd25)*19'd50+offset;
+  always_ff @(posedge frame_clk) 	
+
+	//updates flip flop, current state is the only one
+    begin
+	 if Reset
+		begin
+		ff<=6'b0;
+		is_NPCBeat<=1'b0;
+		NPC_Beat<=1'b0;
+		NPC_X<=10'b0;
+		NPC_d<=1'b0;
+		end
+		
+	 if (Q_on)&&(NPC_Beat!=0)
+		begin
+		ff<=1;
+		is_NPCBeat<=1;
+		NPC_Beat<=0;
+		if NPC_face_d==1
+			NPC_d<=2'd2;
+		else
+			NPC_d<=2'd0;
+		NPC_X<=NPC_X_Pos+100;
+		end
+	 else if(NPC_Beat==0)
+		ff <= ff+1;
+		if NPC_X<= 10'd639&&NPC_X>=0
+			is_NPCBeat<=1;
+			NPC_X<=NPC_X+(NPC_d-1);
+		else
+			is_NPCBeat<=0;
+			
+	 else 
+		ff<=0;
+		is_NPCBeat<=0;
+	end
+	always_comb
+	begin 
+	if ff==0
+		NPC_Beat=1
+	else
+		NPC_Beat=0
+	end
+
+  assign BeatNPC_SRAM_ADDR= DrawX-NPC_X+19'd50 + (DrawY-10'd300+10'd25)*19'd50+offset2;
+ parameter [9:0] NP_Xnpc_end = 10'd540; 
+  parameter [9:0] NP_Xhp_Start = 10'd100;  
+	parameter [9:0] NP_Y_Start = 10'd80;
+	parameter [9:0] NP_SIZE_X = 10'd100;
+	parameter [9:0] NP_SIZE_Y = 10'd25;
+	always_comb begin
+	//is_blood=1'd0;
+	b_color=1'd0;
+	if ((DrawX>=NP_Xhp_Start) && (DrawX<=NP_Xhp_Start+NP_SIZE_X) && (DrawY<=NP_Y_Start+NP_SIZE_Y)&& (DrawY>=NP_Y_Start))
+	 begin
+		//is_blood=1'b1;
+		if (DrawX>=blood_XNP_Start+(64-ff)/64*200)
+			//grey
+			b_color=1'd0;
+		else
+			//red
+			b_color=1'd1;
+	 end
+	if ((DrawX<=NP_Xnpc_end) && (DrawX>=NP_Xnpc_end-blood_SIZE_X)&& (DrawY<=blood_Y_Start+blood_SIZE_Y)&& (DrawY>=blood_Y_Start))
+	begin
+		//is_blood=1'b1;
+		if (DrawX<=NP_Xnpc_end-(64-mm)/64*200)
+			//grey
+			b_color=1'd0;
+		else
+			//red
+			b_color=1'd1;
+		end
+		
+endmodule

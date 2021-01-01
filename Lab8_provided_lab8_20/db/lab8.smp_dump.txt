@@ -1,0 +1,72 @@
+
+State Machine - |lab8|Page_FSM:Page_FSM|curr_state
+Name curr_state.win1_page curr_state.fight_page_two curr_state.fight_page_one curr_state.start_page curr_state.win2_page 
+curr_state.start_page 0 0 0 0 0 
+curr_state.fight_page_one 0 0 1 1 0 
+curr_state.fight_page_two 0 1 0 1 0 
+curr_state.win1_page 1 0 0 1 0 
+curr_state.win2_page 0 0 0 1 1 
+
+State Machine - |lab8|NPC:NPC|choose
+Name choose.110 choose.101 choose.100 choose.011 choose.010 choose.001 choose.000 
+choose.000 0 0 0 0 0 0 0 
+choose.001 0 0 0 0 0 1 1 
+choose.010 0 0 0 0 1 0 1 
+choose.011 0 0 0 1 0 0 1 
+choose.100 0 0 1 0 0 0 1 
+choose.101 0 1 0 0 0 0 1 
+choose.110 1 0 0 0 0 0 1 
+
+State Machine - |lab8|HP:HP|choose
+Name choose.0110 choose.0101 choose.0100 choose.0011 choose.0010 choose.0001 choose.0000 
+choose.0000 0 0 0 0 0 0 0 
+choose.0001 0 0 0 0 0 1 1 
+choose.0010 0 0 0 0 1 0 1 
+choose.0011 0 0 0 1 0 0 1 
+choose.0100 0 0 1 0 0 0 1 
+choose.0101 0 1 0 0 0 0 1 
+choose.0110 1 0 0 0 0 0 1 
+
+State Machine - |lab8|lab8_soc:lab8_soc|lab8_soc_sdram:sdram|m_next
+Name m_next.010000000 m_next.000010000 m_next.000001000 m_next.000000001 
+m_next.000000001 0 0 0 0 
+m_next.000001000 0 0 1 1 
+m_next.000010000 0 1 0 1 
+m_next.010000000 1 0 0 1 
+
+State Machine - |lab8|lab8_soc:lab8_soc|lab8_soc_sdram:sdram|m_state
+Name m_state.100000000 m_state.010000000 m_state.001000000 m_state.000100000 m_state.000010000 m_state.000001000 m_state.000000100 m_state.000000010 m_state.000000001 
+m_state.000000001 0 0 0 0 0 0 0 0 0 
+m_state.000000010 0 0 0 0 0 0 0 1 1 
+m_state.000000100 0 0 0 0 0 0 1 0 1 
+m_state.000001000 0 0 0 0 0 1 0 0 1 
+m_state.000010000 0 0 0 0 1 0 0 0 1 
+m_state.000100000 0 0 0 1 0 0 0 0 1 
+m_state.001000000 0 0 1 0 0 0 0 0 1 
+m_state.010000000 0 1 0 0 0 0 0 0 1 
+m_state.100000000 1 0 0 0 0 0 0 0 1 
+
+State Machine - |lab8|lab8_soc:lab8_soc|lab8_soc_sdram:sdram|i_next
+Name i_next.111 i_next.101 i_next.010 i_next.000 
+i_next.000 0 0 0 0 
+i_next.010 0 0 1 1 
+i_next.101 0 1 0 1 
+i_next.111 1 0 0 1 
+
+State Machine - |lab8|lab8_soc:lab8_soc|lab8_soc_sdram:sdram|i_state
+Name i_state.111 i_state.101 i_state.011 i_state.010 i_state.001 i_state.000 
+i_state.000 0 0 0 0 0 0 
+i_state.001 0 0 0 0 1 1 
+i_state.010 0 0 0 1 0 1 
+i_state.011 0 0 1 0 0 1 
+i_state.101 0 1 0 0 0 1 
+i_state.111 1 0 0 0 0 1 
+
+State Machine - |lab8|lab8_soc:lab8_soc|lab8_soc_nios2_gen2_0:nios2_gen2_0|lab8_soc_nios2_gen2_0_cpu:cpu|lab8_soc_nios2_gen2_0_cpu_nios2_oci:the_lab8_soc_nios2_gen2_0_cpu_nios2_oci|lab8_soc_nios2_gen2_0_cpu_debug_slave_wrapper:the_lab8_soc_nios2_gen2_0_cpu_debug_slave_wrapper|lab8_soc_nios2_gen2_0_cpu_debug_slave_tck:the_lab8_soc_nios2_gen2_0_cpu_debug_slave_tck|DRsize
+Name DRsize.101 DRsize.100 DRsize.011 DRsize.010 DRsize.001 DRsize.000 
+DRsize.000 0 0 0 0 0 0 
+DRsize.001 0 0 0 0 1 1 
+DRsize.010 0 0 0 1 0 1 
+DRsize.011 0 0 1 0 0 1 
+DRsize.100 0 1 0 0 0 1 
+DRsize.101 1 0 0 0 0 1 

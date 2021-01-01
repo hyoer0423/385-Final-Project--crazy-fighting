@@ -1,0 +1,131 @@
+module fight(
+input logic hp_f,
+
+				input logic npc_f,
+
+				input Clk,
+
+					Reset,
+
+					frame_clk,
+
+				input logic [8:0] hp_r,	npc_r,
+
+				input logic [9:0] HP_X_Pos,
+
+				input logic [9:0] NPC_X_Pos,
+
+				output logic [8:0] hp_value,
+
+				output logic [8:0] npc_value,
+
+				output logic is_hp, is_npc
+
+
+);
+
+	logic [8:0] HP_hit, NPC_hit;	
+
+	logic [8:0] HP_hit_in, NPC_hit_in;	
+
+	logic frame_clk_delayed, frame_clk_rising_edge;
+
+   always_ff @ (posedge Clk) begin
+
+        frame_clk_delayed <= frame_clk;
+
+        frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
+
+    end
+
+	always_ff @ (posedge Clk)
+
+  begin
+
+      if (Reset)
+
+      begin
+
+          hp_value<=10'd50,
+
+		    npc_value<=10'd50,
+
+			 hp_hit<= 10'd0;
+
+          npc_hit <= 10'd0;
+
+      end
+
+      else
+
+      begin
+
+         hp_value <= hp_value_in;
+
+         npc_value <= npc_value_in;
+
+			hp_hit <= hp_hit_in;
+
+         npc_hit <= npc_hit_in;
+
+      end
+
+  end
+
+	always_comb
+
+  begin
+
+      // By default, keep motion and position unchanged
+
+      hp_value_in = hp_value;
+
+      npc_value_in = npc_value;
+
+	   hp_hit_in = hp_hit;
+
+      npc_hit_in = npc_hit;
+
+      // Update position and motion only at rising edge of frame clock
+
+      if (frame_clk_rising_edge)
+
+      begin
+
+			if (HP_X_Pos+hp_r)>=NPC_X_Pos &&(HP_X_Pos-hp_r)<=NPC_X_Pos
+
+				hp_hit_in=hp_f
+
+			if (NPC_X_Pos+npc_r)>=NPC_X_Pos &&(NPC_X_Pos-npc_r)<=HP_X_Pos
+
+				npc_hit_in=npc_f
+
+		hp_value_in =hp_value +npc_hit_in ;
+
+		npc_value_in = npc_value+hp_hit_in ;
+
+		end
+
+  end
+
+  always_comb begin
+
+		is_hp = 1'b1;
+
+		is_npc = 1'b1;
+
+		if hp_value<0
+
+					//read_address = DrawX-(HP_X_Pos-19'd25) + (DrawY-(HP_Y_Pos-19'd25))*19'd200;
+
+			is_hp = 1'b0;
+
+		if npc_value<0
+
+			is_npc = 1'b0;
+
+	end	
+
+end
+
+endmodule

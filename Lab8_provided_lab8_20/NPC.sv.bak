@@ -1,0 +1,210 @@
+module NPC (
+	input Clk,
+			Reset,
+			frame_clk,
+	input [9:0]fig_x,fig_y,
+	input logic [9:0] DrawX, DrawY,
+	output logic [3:0] NPC_data,
+	output logic is_NPC
+	);
+	// screen size
+	parameter [9:0] NPC_X_Center = 10'd420;  // Center position on the X axis
+   parameter [9:0] NPC_Y_Center = 10'd240;
+	parameter [9:0] NPC_SIZE_X = 10'd100;
+	parameter [9:0] NPC_SIZE_Y = 10'd125;
+	parameter [9:0] X_Step=10'd1;
+	parameter [9:0] Y_Step=10'd1;
+	parameter [9:0] X_MIN=10'd0;
+	parameter [9:0] X_MAX=10'd639;
+	parameter [9:0] Y_MIN=10'd0;
+	parameter [9:0] Y_MAX=10'd479;
+	
+	//--------------------load memory-----------------//
+	logic [18:0] read_address,read_invress;
+	logic [9:0] NPC_X_Pos, NPC_Y_Pos,NPC_X_Motion,NPC_Y_Motion;
+   logic [9:0] NPC_X_Pos_in,  NPC_Y_Pos_in,NPC_X_Motion_in,NPC_Y_Motion_in;
+	logic is_f_in;
+	logic face_d,face_d_in;
+	logic [4:0] counterL,counterL_in;
+	logic [4:0] counterR,counterR_in;
+	logic [4:0] counterF,counterF_in;
+	
+	logic [2:0] choose,choose_in;
+	logic frame_clk_delayed, frame_clk_rising_edge;
+	
+	 if ( NPC_X_Pos <= X_MIN + NPC_SIZE ) // Ball is at the top edge, BOUNCE!
+							
+							keycode=8'h07;
+								
+					
+				else if ( NPC_X_Pos + NPC_SIZE >= X_MAX )// Ball is at the bottom edge, BOUNCE!
+							 
+							keycode=8'h04;
+							
+				else if (NPC_X_Pos>=fig_X-10'd100)
+						   keycode=8'h04;
+							
+				else if (NPC_X_Pos<=fig_X+10'd100)
+							
+							keycode=8'h07;
+				else
+							
+							keycode=8'h07;
+    always_ff @ (posedge Clk) begin
+        frame_clk_delayed <= frame_clk;
+        frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
+    end
+  
+always_ff @ (posedge Clk)
+  begin
+      if (Reset)
+      begin
+		
+          NPC_X_Pos <= NPC_X_Center;
+          NPC_Y_Pos <= NPC_Y_Center;
+			 NPC_X_Motion <= 10'd0;
+          NPC_Y_Motion <= 10'd0;
+			 face_d<=1'b0;
+			 choose<=3'b000;
+			 is_f<=1'b0;
+			 counterL<=4'b0;
+			 counterR<=4'b0;
+			 counterF<=4'b0; 
+          
+      end
+      else
+      begin
+		
+         NPC_X_Pos <= NPC_X_Pos_in;
+         NPC_Y_Pos <= NPC_Y_Pos_in;
+		   NPC_X_Motion <= NPC_X_Motion_in;
+         NPC_Y_Motion <= NPC_Y_Motion_in;
+			face_d<=face_d_in;
+			choose<=choose_in;
+			is_f<=is_f_in;
+			counterL<=counterL_in;
+			counterR<=counterR_in;
+			counterF<=counterF_in;
+      end
+  end
+	always_comb
+  begin
+      // By default, keep motion and position unchanged
+      NPC_X_Pos_in = NPC_X_Pos;
+      NPC_Y_Pos_in = NPC_Y_Pos;
+      NPC_X_Motion_in = NPC_X_Motion;
+      NPC_Y_Motion_in = NPC_Y_Motion;
+		face_d_in=face_d;
+		is_f_in=is_f;
+		choose_in=choose;
+		counterL_in=counterL;
+		counterF_in=counterF;
+		counterR_in=counterR;	
+      // Update position and motion only at rising edge of frame clock
+      if (frame_clk_rising_edge)
+      begin
+				case(keycode)
+				
+					
+					8'h04: //A left
+							begin
+							counterL_in=counterL_in+4'd1;
+							
+							if (counterL_in<4'd8)
+									choose_in=3'b010;
+								else
+									choose_in=3'b001;
+									
+							if ( NPC_X_Pos <= X_MIN + NPC_SIZE_X ) // Ball is at the top edge, BOUNCE!
+							begin
+								face_d_in=1'b1;
+								NPC_X_Motion_in = 10'd0;
+								NPC_Y_Motion_in = 10'd0;
+							end
+							else
+					
+							begin
+									face_d_in=1'b1;
+									NPC_Y_Motion_in =10'd0;
+									NPC_X_Motion_in = ((~X_Step) + 1'b1);
+							end
+							end
+					8'h07: begin
+							counterR_in=counterR_in+4'd1;
+							if (counterR_in<4'd8)
+								choose_in=3'b111;
+							else
+								choose_in=3'b101;
+							if( NPC_X_Pos + NPC_SIZE_X >= X_MAX ) // Ball is at the bottom edge, BOUNCE!
+							begin
+
+								face_d_in=1'b0;
+								NPC_X_Motion_in = 10'd0;  // 2's complement.  
+								NPC_Y_Motion_in = 10'd0;
+							end
+							else begin
+									face_d_in=1'b0;
+									NPC_Y_Motion_in =10'd0;
+									NPC_X_Motion_in = X_Step;
+								end
+							end
+					8'h09: begin //fist
+							counterF_in=counterF_in+4'd1;
+							if (counterF_in<4'd100)
+								is_f=1'b1;
+							else
+								is_f=1'b0;
+							counterF_in=counterF_in+5'd1;
+							if (counterF_in<4'd8)
+								choose_in=3'b100;
+							else
+								choose_in=3'b011;
+							NPC_X_Motion_in = 10'd0;  // 2's complement.  
+							NPC_Y_Motion_in = 10'd0;
+							end
+					default:begin
+							is_f_in=1'b0;
+							face_d_in=1'b0;
+							HP_X_Motion_in =10'd0;
+							HP_Y_Motion_in =10'd0;
+							choose_in=3'b000;
+							end
+					
+				endcase
+         HP_X_Pos_in = HP_X_Pos+HP_X_Motion_in ;
+         HP_Y_Pos_in = HP_Y_Pos+HP_Y_Motion_in ;
+			end	
+		
+		end
+   
+	always_comb begin
+		case(choose)
+	
+		3'b000:offset=32'h4B000;//stand
+
+		3'b001:offset= 32'h4B000+32'hC350;//walk left
+		3'b010:offset=32'h4B000+32'hC350+32'hC350;
+		
+		3'b011:offset= 32'h4B000+32'hC350+32'hC350+32'hC350;//fist
+		3'b100:offset= 32'h4B000+32'hC350+32'hC350+32'hC350+32'hC350;
+		3'b101:offset= 32'h4B000+32'hC350;//walk left
+		3'b111:offset=32'h4B000+32'hC350+32'hC350;
+		default: offset=32'h4B000;
+		endcase
+		end
+		
+	always_comb begin
+		is_NPC = 1'b0;
+		NPC_SRAM_ADDR=32'h0;
+		if (DrawX<=(NPC_X_Pos+10'd99)&& DrawX>=(NPC_X_Pos-10'd100)&& DrawY<=(NPC_Y_Pos+10'd124)&& DrawY>=(NPC_Y_Pos-10'd125))begin
+					//read_address = DrawX-(HP_X_Pos-19'd25) + (DrawY-(HP_Y_Pos-19'd25))*19'd200;
+					if face_d==1'b1
+						NPC_SRAM_ADDR= DrawX-NPC_X_Pos+19'd100 + (DrawY-NPC_Y_Pos+125)*19'd200+offset;
+					else
+						NPC_SRAM_ADDR=-DrawX+NPC_X_Pos+19'd100 + (DrawY-NPC_Y_Pos+125)*19'd200+offset;
+					is_NPC = 1'b1;
+					
+				end
+	end
+	
+endmodule

@@ -1,0 +1,54 @@
+module saber (
+	input Clk, 
+	input logic saber_exist,
+	input logic [9:0] DrawX, DrawY,
+	input logic [9:0] saber_x,
+	input logic [9:0] saber_y,
+	output logic [3:0] saber_data
+
+);
+	// screen size
+	parameter [9:0] SCREEN_WIDTH =  10'd480;
+   parameter [9:0] SCREEN_LENGTH = 10'd640;
+	parameter [9:0] SABERS_WIDTH =  10'd234;
+	parameter [9:0] SABERS_LENGTH =  10'd256;
+	//--------------------load memory-----------------//
+	logic [18:0] read_address;
+	logic [9:0] CenterX;		// saber center in the collection graph
+	logic [9:0] CenterY;
+	logic [9:0] CornerX;		// the frame left up corner
+	logic [9:0] CornerY;
+	logic [9:0] FrameX;		// the frame size
+	logic [9:0] FrameY;
+	logic [5:0] state;
+	assign read_address = 19'b0;
+	saber_RAM saber_RAM(.*);
+
+	
+	
+	
+	
+endmodule
+
+module  saber_RAM
+(
+		input [18:0] read_address,
+		input Clk,
+
+		output logic [3:0] saber_data
+);
+
+// mem has width of 4 bits and a total of 307200 addresses
+//logic [3:0] mem [0:307199];
+logic [3:0] mem [0:59903];
+initial
+begin
+	 $readmemh("image/sprite_bytes/HP.txt", mem);
+end
+
+
+always_ff @ (posedge Clk) begin
+	saber_data<= mem[read_address];
+end
+
+endmodule
